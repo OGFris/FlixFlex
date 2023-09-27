@@ -10,6 +10,7 @@ type Config struct {
 	DatabaseURL string
 	Port        string
 	JWT         string
+	TmdbApiKey  string
 }
 
 func LoadConfig() (*Config, error) {
@@ -32,10 +33,16 @@ func LoadConfig() (*Config, error) {
 		return nil, fmt.Errorf("JWT_KEY environment variable not set")
 	}
 
+	tmdb, ok := os.LookupEnv("TMDB_API_KEY")
+	if !ok {
+		return nil, fmt.Errorf("TMDB_API_KEY environment variable not set")
+	}
+
 	config := &Config{
 		DatabaseURL: dbURL,
 		Port:        port,
 		JWT:         jwt,
+		TmdbApiKey:  tmdb,
 	}
 
 	return config, nil
