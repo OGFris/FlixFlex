@@ -36,7 +36,7 @@ func JWTWithConfig(config JWTConfig) fiber.Handler {
 
 		claims, err := validateToken(auth, config.SigningKey.(string))
 		if err != nil {
-			return c.Status(http.StatusUnauthorized).JSON(errors.ErrorResponse{errors.ErrJWTInvalid.Error()})
+			return c.Status(http.StatusUnauthorized).JSON(errors.ErrorResponse{Message: errors.ErrJWTInvalid.Error()})
 		}
 
 		c.Locals("user_id", claims.UserID)

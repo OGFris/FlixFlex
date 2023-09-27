@@ -14,6 +14,7 @@ import (
 type AuthService interface {
 	Login(username, password string) (*models.User, error)
 	GenerateJWT(user *models.User) (string, string, error)
+	Register(user *models.User) error
 }
 
 type UserAuthService struct {
@@ -67,4 +68,28 @@ func (s *UserAuthService) GenerateJWT(user *models.User) (string, string, error)
 	}
 
 	return tokenString, refreshString, nil
+}
+
+func (s *UserAuthService) Register(user *models.User) error {
+	exists, err := s.UserRepository.UsernameExists(user.Username)
+	if err != nil {
+
+		return err
+	}
+	if exists {
+
+		return errors.ErrUsernameTaken
+	}
+
+	exists2, err := s.UserRepository.EmailExists(user.Username)
+	if err != nil {
+
+		return err
+	}
+	if exists2 {
+
+		return errors.ErrEmailTaken
+	}
+
+	return s.UserRepository.Create(user)
 }

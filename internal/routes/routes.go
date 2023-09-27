@@ -11,6 +11,7 @@ func RegisterRoutes(app *fiber.App, authHandler *handlers.AuthHandler) {
 	// Authentication routes
 	authRoutes := app.Group("/auth")
 	authRoutes.Post("/login", authHandler.Login)
+	authRoutes.Post("/register", authHandler.Register)
 
 	// Regular user routes
 	userRoutes := app.Group("/user")

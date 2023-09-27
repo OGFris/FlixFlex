@@ -14,6 +14,8 @@ var (
 	ErrMissingData      = errors.New("missing.data")
 	ErrUserDisabled     = errors.New("account.disabled")
 	ErrNoAccess         = errors.New("no.access")
+	ErrUsernameTaken    = errors.New("username.taken")
+	ErrEmailTaken       = errors.New("email.taken")
 )
 
 type ErrorResponse struct {

@@ -1,6 +1,6 @@
 package responses
 
-type UserLogin struct {
+type UserJWT struct {
 	AccessToken  string `json:"access_token"`
 	RefreshToken string `json:"refresh_token"`
 }
