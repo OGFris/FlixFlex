@@ -7,6 +7,7 @@ import (
 )
 
 type UserRepository interface {
+	FindByUsername(username string) (*models.User, error)
 	FindByID(id uint) (*models.User, error)
 	Create(user *models.User) error
 	Update(user *models.User) error
@@ -22,9 +23,9 @@ func NewUserRepository(db *gorm.DB) UserRepository {
 	return &mysqlUserRepository{db: db}
 }
 
-func (r *mysqlUserRepository) FindByID(id uint) (*models.User, error) {
-	user := &models.User{}
-	result := r.db.First(user, id)
+func (r *mysqlUserRepository) FindByUsername(username string) (*models.User, error) {
+	var user models.User
+	result := r.db.Where("username = ?", username).First(&user)
 	if result.Error != nil {
 		if result.Error == gorm.ErrRecordNotFound {
 
@@ -34,7 +35,22 @@ func (r *mysqlUserRepository) FindByID(id uint) (*models.User, error) {
 		return nil, errors.ErrDatabase
 	}
 
-	return user, nil
+	return &user, nil
+}
+
+func (r *mysqlUserRepository) FindByID(id uint) (*models.User, error) {
+	var user models.User
+	result := r.db.Where("id = ?", id).First(user)
+	if result.Error != nil {
+		if result.Error == gorm.ErrRecordNotFound {
+
+			return nil, errors.ErrUserNotFound
+		}
+
+		return nil, errors.ErrDatabase
+	}
+
+	return &user, nil
 }
 
 func (r *mysqlUserRepository) Create(user *models.User) error {
